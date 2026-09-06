@@ -49,3 +49,21 @@ def rank(profile, candidates: List[dict]):
         item["reasons"] = reasons
         out.append(item)
     return sorted(out, key=lambda x: (x["score"], x.get("retrieval_score", 0)), reverse=True)
+
+def classify(score: int) -> str:
+    if score >= 75:
+        return "Highly suitable"
+    if score >= 45:
+        return "Possibly eligible"
+    return "Needs verification"
+
+def enrich_results(profile, candidates: List[dict]):
+    results = rank(profile, candidates)
+    for item in results:
+        item["match_type"] = classify(item["score"])
+        item["missing_requirements"] = [
+            reason.replace("Your ", "").replace(".", "")
+            for reason in item["reasons"]
+            if "may not" in reason or "does not" in reason or "above" in reason or "verify" in reason
+        ]
+    return results
