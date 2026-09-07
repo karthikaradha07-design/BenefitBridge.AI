@@ -1,8 +1,0 @@
-backend/.env
-\.env
-backend/.venv/
-frontend/node_modules/
-frontend/dist/
-__pycache__/
-*.pyc
-qdrant_storage/
